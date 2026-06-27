@@ -8,7 +8,7 @@ use crate::config::UniversalConfig;
 pub struct WindsurfRenderer;
 
 impl AgentRenderer for WindsurfRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "windsurf"
     }
 

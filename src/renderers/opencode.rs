@@ -10,7 +10,7 @@ use crate::config::{ServerConfig, Transport, UniversalConfig};
 pub struct OpenCodeRenderer;
 
 impl AgentRenderer for OpenCodeRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "opencode"
     }
 

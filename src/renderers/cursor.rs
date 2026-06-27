@@ -8,7 +8,7 @@ use crate::config::UniversalConfig;
 pub struct CursorRenderer;
 
 impl AgentRenderer for CursorRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "cursor"
     }
 

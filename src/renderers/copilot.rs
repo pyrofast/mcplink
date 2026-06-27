@@ -8,7 +8,7 @@ use crate::config::UniversalConfig;
 pub struct CopilotRenderer;
 
 impl AgentRenderer for CopilotRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "copilot"
     }
 

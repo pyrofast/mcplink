@@ -8,7 +8,7 @@ use crate::config::UniversalConfig;
 pub struct VSCodeRenderer;
 
 impl AgentRenderer for VSCodeRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "vscode"
     }
 

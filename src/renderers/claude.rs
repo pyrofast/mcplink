@@ -8,7 +8,7 @@ use crate::config::UniversalConfig;
 pub struct ClaudeRenderer;
 
 impl AgentRenderer for ClaudeRenderer {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "claude-code"
     }
 
