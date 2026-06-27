@@ -25,11 +25,12 @@ pub fn all_renderers() -> Vec<Box<dyn AgentRenderer>> {
 }
 
 pub fn detect_agents(project_root: &Path) -> Vec<AgentInfo> {
-    all_renderers()
-        .iter()
-        .map(|r| AgentInfo {
+    let mut info = Vec::new();
+    for r in all_renderers() {
+        info.push(AgentInfo {
             name: r.name(),
             present: r.exists(project_root),
-        })
-        .collect()
+        });
+    }
+    info
 }

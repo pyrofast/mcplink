@@ -20,7 +20,7 @@ pub fn run(project_root: &Path) -> Result<()> {
     fs::write(&pid_path, format!("{}", std::process::id()))?;
 
     let (tx, rx) = mpsc::channel();
-    let mut watcher = PollWatcher::new(tx, Config::default().poll_interval_v2(Duration::from_secs(2)))
+    let mut watcher = PollWatcher::new(tx, Config::default())
         .context("Failed to create file watcher")?;
     watcher
         .watch(&source, RecursiveMode::NonRecursive)

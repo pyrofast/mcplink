@@ -22,7 +22,7 @@ fn installed_flag() -> PathBuf {
 }
 
 pub fn install() -> Result<()> {
-    let manager = native_service_manager();
+    let manager = native_service_manager()?;
 
     let exe = std::env::current_exe().context("Failed to get current exe path")?;
 
@@ -54,7 +54,7 @@ pub fn install() -> Result<()> {
 }
 
 pub fn start() -> Result<()> {
-    let manager = native_service_manager();
+    let manager = native_service_manager()?;
     manager
         .start(ServiceStartCtx {
             label: label(),
@@ -63,7 +63,7 @@ pub fn start() -> Result<()> {
 }
 
 pub fn stop() -> Result<()> {
-    let manager = native_service_manager();
+    let manager = native_service_manager()?;
     manager
         .stop(ServiceStopCtx {
             label: label(),
@@ -72,7 +72,7 @@ pub fn stop() -> Result<()> {
 }
 
 pub fn uninstall() -> Result<()> {
-    let manager = native_service_manager();
+    let manager = native_service_manager()?;
     let _ = manager.stop(ServiceStopCtx {
         label: label(),
     });
