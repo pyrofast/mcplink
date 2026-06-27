@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use service_manager::{
-    native_service_manager, ServiceInstallCtx, ServiceLabel, ServiceManager, ServiceStartCtx,
+    native_service_manager, ServiceInstallCtx, ServiceLabel, ServiceStartCtx,
     ServiceStopCtx, ServiceUninstallCtx,
 };
 
