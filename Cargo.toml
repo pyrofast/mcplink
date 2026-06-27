@@ -1,6 +1,6 @@
 [package]
-name = "agents-mcp"
-version = "0.1.0"
+name = "mcplink"
+version = "0.1.1"
 edition = "2021"
 description = "Universal MCP config sync daemon"
 repository = "https://github.com/pyrofast/agents-mcp"

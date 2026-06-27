@@ -92,7 +92,7 @@ fn first_run() -> Result<()> {
     }
 
     let agents = detect::detect_agents(&project_root);
-    println!("\nagents-mcp v{}", env!("CARGO_PKG_VERSION"));
+    println!("\nmcplink v{}", env!("CARGO_PKG_VERSION"));
     println!("Universal MCP config sync daemon\n");
     println!("✓ Service installed");
     println!("✓ Auto-start enabled");

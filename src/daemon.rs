@@ -34,13 +34,13 @@ pub fn run(project_root: &Path) -> Result<()> {
                     if let Ok(config) = read_universal_config(&source) {
                         for renderer in all_renderers() {
                             if let Err(e) = renderer.write(&config, project_root) {
-                                eprintln!("[agents-mcp] {} write error: {e}", renderer.name());
+                                eprintln!("[mcplink] {} write error: {e}", renderer.name());
                             }
                         }
                     }
                 }
             }
-            Ok(Err(e)) => eprintln!("[agents-mcp] watch error: {e}"),
+            Ok(Err(e)) => eprintln!("[mcplink] watch error: {e}"),
             Err(mpsc::RecvError) => break,
         }
     }
@@ -59,6 +59,6 @@ fn is_write_event(event: &notify::Event) -> bool {
 pub fn pid_file_path() -> std::path::PathBuf {
     let base = dirs::data_local_dir()
         .unwrap_or_else(|| Path::new("/tmp").to_path_buf())
-        .join("agents-mcp");
+        .join("mcplink");
     base.join("daemon.pid")
 }

@@ -1,4 +1,4 @@
-# agents-mcp
+# mcplink
 
 Universal MCP config sync daemon. One source of truth, all agents stay in sync.
 
@@ -8,7 +8,7 @@ Every AI agent stores MCP config in its own path with its own schema. Add a serv
 
 ## Solution
 
-`.agents/mcp.json` is the single source of truth. `agents-mcp` watches it and propagates every change to all agents automatically.
+`.agents/mcp.json` is the single source of truth. `mcplink` watches it and propagates every change to all agents automatically.
 
 ## Supported agents
 
@@ -25,13 +25,13 @@ Every AI agent stores MCP config in its own path with its own schema. Add a serv
 
 ```bash
 # First run — installs as system service
-agents-mcp
+mcplink
 
 # Commands
-agents-mcp status    # Show daemon status and synced agents
-agents-mcp sync      # Force sync now
-agents-mcp stop      # Stop the daemon
-agents-mcp uninstall # Remove service
+mcplink status    # Show daemon status and synced agents
+mcplink sync      # Force sync now
+mcplink stop      # Stop the daemon
+mcplink uninstall # Remove service
 ```
 
 ## Source of truth

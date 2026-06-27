@@ -8,13 +8,13 @@ use service_manager::{
 };
 
 fn label() -> ServiceLabel {
-    "dev.agents-mcp".parse().expect("valid service label")
+    "com.mcplink.daemon".parse().expect("valid service label")
 }
 
 fn state_dir() -> PathBuf {
     dirs::data_local_dir()
         .unwrap_or_else(|| std::path::Path::new("/tmp").to_path_buf())
-        .join("agents-mcp")
+        .join("mcplink")
 }
 
 fn installed_flag() -> PathBuf {

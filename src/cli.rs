@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "agents-mcp", version, about = "Universal MCP config sync daemon")]
+#[command(name = "mcplink", version, about = "Universal MCP config sync daemon")]
 pub struct Cli {
     #[arg(long, help = "Run as daemon (called by service)")]
     pub daemon: bool,
