@@ -20,4 +20,15 @@ pub enum Command {
     Stop,
     #[command(about = "Remove service and restore original configs")]
     Uninstall,
+    #[command(about = "Detect and list agents installed on this system", aliases = &["als"])]
+    Agents {
+        #[command(subcommand)]
+        action: Option<AgentsAction>,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum AgentsAction {
+    #[command(name = "list", about = "List all available agents and their install status")]
+    List,
 }

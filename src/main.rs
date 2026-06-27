@@ -8,7 +8,7 @@ mod sync;
 
 use anyhow::Result;
 use clap::Parser;
-use cli::{Cli, Command};
+use cli::{AgentsAction, Cli, Command};
 
 fn find_project_root() -> Result<std::path::PathBuf> {
     let cwd = std::env::current_dir()?;
@@ -73,6 +73,19 @@ fn stop() -> Result<()> {
     Ok(())
 }
 
+fn agents_list() -> Result<()> {
+    let agents = detect::detect_os_agents();
+    println!("Agents installed on this system:\n");
+    for a in &agents {
+        let icon = if a.installed { "✓" } else { " " };
+        println!("  {} {} ({})", icon, a.name, a.binary);
+        if let Some(loc) = &a.location {
+            println!("       {}", loc);
+        }
+    }
+    Ok(())
+}
+
 fn uninstall() -> Result<()> {
     stop()?;
     service::uninstall()?;
@@ -128,6 +141,11 @@ fn main() -> Result<()> {
             Some(Command::Sync) => sync(),
             Some(Command::Stop) => stop(),
             Some(Command::Uninstall) => uninstall(),
+            Some(Command::Agents { action }) => {
+                match action.unwrap_or(AgentsAction::List) {
+                    AgentsAction::List => agents_list(),
+                }
+            }
             None => first_run(),
         }
     }

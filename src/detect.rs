@@ -30,3 +30,42 @@ pub fn detect_agents(project_root: &Path) -> Vec<AgentInfo> {
         present: r.exists(project_root),
     }).collect()
 }
+
+fn which(binary: &str) -> bool {
+    let path = std::env::var("PATH").unwrap_or_default();
+    path.split(':').any(|dir| std::path::Path::new(dir).join(binary).exists())
+}
+
+#[derive(Debug)]
+pub struct OsAgentInfo {
+    pub name: &'static str,
+    pub binary: &'static str,
+    pub installed: bool,
+    pub location: Option<String>,
+}
+
+pub fn detect_os_agents() -> Vec<OsAgentInfo> {
+    let agents: &[(&str, &str)] = &[
+        ("cursor", "cursor"),
+        ("claude-code", "claude"),
+        ("copilot", "github-copilot"),
+        ("vscode", "code"),
+        ("windsurf", "windsurf"),
+        ("opencode", "opencode"),
+    ];
+
+    let path = std::env::var("PATH").unwrap_or_default();
+
+    agents.iter().map(|&(name, binary)| {
+        let location = path.split(':').find_map(|dir| {
+            let full = std::path::Path::new(dir).join(binary);
+            if full.exists() { Some(full.to_string_lossy().to_string()) } else { None }
+        });
+        OsAgentInfo {
+            name,
+            binary,
+            installed: location.is_some(),
+            location,
+        }
+    }).collect()
+}
