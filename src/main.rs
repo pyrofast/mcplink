@@ -29,16 +29,18 @@ fn find_project_root() -> Result<std::path::PathBuf> {
 
 fn status() -> Result<()> {
     let pid_path = daemon::pid_file_path();
-    let running = pid_path.exists()
-        && pid_path
-            .to_string_lossy()
-            .as_ref()
-            .len()
-            > 0;
+    let pid = pid_path.exists().then(|| {
+        std::fs::read_to_string(&pid_path)
+            .ok()
+            .and_then(|s| s.trim().parse::<u32>().ok())
+    }).flatten();
 
-    if running {
-        let pid = std::fs::read_to_string(&pid_path).unwrap_or_default();
-        println!("● Daemon running (PID {})", pid.trim());
+    let alive = pid.is_some_and(|pid| {
+        std::path::Path::new(&format!("/proc/{}", pid)).exists()
+    });
+
+    if alive {
+        println!("● Daemon running (PID {})", pid.unwrap());
     } else {
         println!("○ Daemon not running");
     }

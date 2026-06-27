@@ -66,3 +66,60 @@ fn transform_server(server: &crate::config::ServerConfig) -> Value {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::{ServerConfig, Transport};
+
+    fn http_server() -> ServerConfig {
+        ServerConfig {
+            transport: Transport::Http,
+            url: Some("http://localhost:3000".into()),
+            headers: None,
+            command: None,
+            args: None,
+            env: None,
+        }
+    }
+
+    fn stdio_server() -> ServerConfig {
+        ServerConfig {
+            transport: Transport::Stdio,
+            url: None,
+            headers: None,
+            command: Some("npx".into()),
+            args: Some(vec!["-y".into(), "@mcp/server".into()]),
+            env: Some([("KEY".into(), "val".into())].into()),
+        }
+    }
+
+    #[test]
+    fn test_transform_http() {
+        let v = transform_server(&http_server());
+        let obj = v.as_object().unwrap();
+        assert_eq!(obj["type"], "http");
+        assert_eq!(obj["url"], "http://localhost:3000");
+    }
+
+    #[test]
+    fn test_transform_stdio() {
+        let v = transform_server(&stdio_server());
+        let obj = v.as_object().unwrap();
+        assert_eq!(obj["command"], "npx");
+        assert_eq!(obj["args"], serde_json::json!(["-y", "@mcp/server"]));
+        assert_eq!(obj["env"], serde_json::json!({"KEY": "val"}));
+    }
+
+    #[test]
+    fn test_transform_stdio_no_env() {
+        let s = ServerConfig {
+            env: None,
+            ..stdio_server()
+        };
+        let v = transform_server(&s);
+        let obj = v.as_object().unwrap();
+        assert_eq!(obj["command"], "npx");
+        assert!(obj.get("env").is_none());
+    }
+}

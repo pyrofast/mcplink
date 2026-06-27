@@ -25,7 +25,8 @@ pub fn all_renderers() -> Vec<Box<dyn AgentRenderer>> {
 }
 
 pub fn detect_agents(project_root: &Path) -> Vec<AgentInfo> {
-    all_renderers()
+    let renderers = all_renderers();
+    renderers
         .iter()
         .map(|r| AgentInfo {
             name: r.name(),

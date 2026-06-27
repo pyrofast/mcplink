@@ -1,3 +1,6 @@
+use std::fs;
+use std::path::PathBuf;
+
 use anyhow::{Context, Result};
 use service_manager::{
     ServiceInstallCtx, ServiceLabel, ServiceManager, ServiceStartCtx, ServiceStopCtx,
@@ -5,14 +8,22 @@ use service_manager::{
 };
 use std::env::current_exe;
 
-fn label() -> Result<ServiceLabel> {
-    "dev.agents-mcp"
-        .parse()
-        .context("Failed to parse service label")
+fn label() -> ServiceLabel {
+    "dev.agents-mcp".parse().expect("valid service label")
 }
 
 fn manager() -> Result<Box<dyn ServiceManager>> {
-    service_manager::native::<dyn ServiceManager>().context("Failed to create service manager")
+    service_manager::native().context("Failed to create service manager")
+}
+
+fn state_dir() -> PathBuf {
+    dirs::data_local_dir()
+        .unwrap_or_else(|| std::path::Path::new("/tmp").to_path_buf())
+        .join("agents-mcp")
+}
+
+fn installed_flag() -> PathBuf {
+    state_dir().join(".installed")
 }
 
 pub fn install() -> Result<()> {
@@ -21,7 +32,7 @@ pub fn install() -> Result<()> {
 
     manager
         .install(ServiceInstallCtx {
-            label: label()?,
+            label: label(),
             program: exe,
             args: vec!["--daemon".into()],
             autostart: true,
@@ -30,10 +41,12 @@ pub fn install() -> Result<()> {
         .context("Failed to install service")?;
 
     manager
-        .start(&ServiceStartCtx {
-            label: label()?,
+        .start(ServiceStartCtx {
+            label: label(),
         })
         .context("Failed to start service")?;
+
+    fs::write(installed_flag(), "")?;
 
     Ok(())
 }
@@ -41,8 +54,8 @@ pub fn install() -> Result<()> {
 pub fn start() -> Result<()> {
     let manager = manager()?;
     manager
-        .start(&ServiceStartCtx {
-            label: label()?,
+        .start(ServiceStartCtx {
+            label: label(),
         })
         .context("Failed to start service")
 }
@@ -50,27 +63,29 @@ pub fn start() -> Result<()> {
 pub fn stop() -> Result<()> {
     let manager = manager()?;
     manager
-        .stop(&ServiceStopCtx {
-            label: label()?,
+        .stop(ServiceStopCtx {
+            label: label(),
         })
         .context("Failed to stop service")
 }
 
 pub fn uninstall() -> Result<()> {
     let manager = manager()?;
-    let _ = manager.stop(&ServiceStopCtx {
-        label: label()?,
+    let _ = manager.stop(ServiceStopCtx {
+        label: label(),
     });
     manager
         .uninstall(ServiceUninstallCtx {
-            label: label()?,
+            label: label(),
         })
-        .context("Failed to uninstall service")
+        .context("Failed to uninstall service")?;
+
+    let _ = fs::remove_file(installed_flag());
+    let _ = fs::remove_file(crate::daemon::pid_file_path());
+
+    Ok(())
 }
 
 pub fn is_installed() -> bool {
-    manager()
-        .and_then(|m| m.list_available_services())
-        .map(|services| services.iter().any(|s| s.label.to_string() == "dev.agents-mcp"))
-        .unwrap_or(false)
+    installed_flag().exists()
 }
