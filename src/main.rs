@@ -78,7 +78,11 @@ fn agents_list() -> Result<()> {
     println!("Agents installed on this system:\n");
     for a in &agents {
         let icon = if a.installed { "✓" } else { " " };
-        println!("  {} {} ({})", icon, a.name, a.binary);
+        print!("  {} {}", icon, a.name);
+        if let Some(note) = &a.note {
+            print!(" ({})", note);
+        }
+        println!();
         if let Some(loc) = &a.location {
             println!("       {}", loc);
         }
