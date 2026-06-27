@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::renderers::claude::ClaudeRenderer;
 use crate::renderers::copilot::CopilotRenderer;
@@ -81,11 +81,13 @@ pub fn detect_os_agents() -> Vec<OsAgentInfo> {
                 if p.exists() { Some(p.to_string_lossy().to_string()) } else { None }
             });
         let has_config = home_dir().join(".claude.json").exists();
+        let installed = loc.is_some() || has_config;
+        let note = if !installed && has_config { Some("config found (~/.claude.json)") } else { None };
         agents.push(OsAgentInfo {
             name: "Claude Code",
-            installed: loc.is_some() || has_config,
+            installed,
             location: loc,
-            note: if !loc.is_some() && has_config { Some("config found (~/.claude.json)") } else { None },
+            note,
         });
     }
 
@@ -93,11 +95,13 @@ pub fn detect_os_agents() -> Vec<OsAgentInfo> {
     {
         let loc = find_in_path("gh")
             .map(|p| format!("{} (gh CLI)", p));
+        let installed = loc.is_some();
+        let note = if installed { Some("via GitHub CLI") } else { None };
         agents.push(OsAgentInfo {
             name: "Copilot",
-            installed: loc.is_some(),
+            installed,
             location: loc,
-            note: if loc.is_some() { Some("via GitHub CLI") } else { None },
+            note,
         });
     }
 
