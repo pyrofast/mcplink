@@ -53,5 +53,5 @@ else
   sudo mv /tmp/mcplink "$DEST"
 fi
 
-echo "==> Done! Running first-time setup..."
-mcplink
+echo "==> Done! Running first-time setup (requires sudo for service install)..."
+sudo mcplink
