@@ -46,9 +46,12 @@ jobs:
         with:
           target: ${{ matrix.target }}
       - run: cargo build --release --target ${{ matrix.target }}
+      - name: Rename binary
+        run: cp target/${{ matrix.target }}/release/mcplink${{ matrix.ext }} mcplink-${{ matrix.target }}${{ matrix.ext }}
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
-          files: target/${{ matrix.target }}/release/mcplink${{ matrix.ext }}
+          files: mcplink-${{ matrix.target }}${{ matrix.ext }}
           name: mcplink ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: true

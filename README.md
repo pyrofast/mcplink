@@ -59,33 +59,39 @@ Create `.agents/mcp.json` in your project root:
 
 ## Install
 
-Download the binary for your platform and run it once — it installs itself as a system service.
+Download and run the binary for your platform — it auto-installs as a system daemon on first run.
 
 ### Linux (x86_64)
 ```bash
-curl -L https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-unknown-linux-gnu -o mcplink
-chmod +x mcplink && ./mcplink
+curl -fsSLo mcplink https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-unknown-linux-gnu
+chmod +x mcplink
+sudo mv mcplink /usr/local/bin/
+mcplink
 ```
 
 ### macOS (Intel)
 ```bash
-curl -L https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-apple-darwin -o mcplink
-chmod +x mcplink && ./mcplink
+curl -fsSLo mcplink https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-apple-darwin
+chmod +x mcplink
+sudo mv mcplink /usr/local/bin/
+mcplink
 ```
 
 ### macOS (Apple Silicon)
 ```bash
-curl -L https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-aarch64-apple-darwin -o mcplink
-chmod +x mcplink && ./mcplink
+curl -fsSLo mcplink https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-aarch64-apple-darwin
+chmod +x mcplink
+sudo mv mcplink /usr/local/bin/
+mcplink
 ```
 
-### Windows (x86_64 PowerShell)
+### Windows (x86_64 PowerShell as Admin)
 ```powershell
-curl -L https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-pc-windows-msvc.exe -o mcplink.exe
+curl.exe -fsSLo mcplink.exe https://github.com/pyrofast/mcplink/releases/download/v0.1.1/mcplink-x86_64-pc-windows-msvc.exe
 .\mcplink.exe
 ```
 
-Or grab the right binary from [Releases](https://github.com/pyrofast/mcplink/releases).
+All platforms: download the right binary from [Releases](https://github.com/pyrofast/mcplink/releases), place it in your PATH, then run `mcplink`.
 
 ## Build from source
 
