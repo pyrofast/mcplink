@@ -103,10 +103,10 @@ fn first_run() -> Result<()> {
     if !service::is_installed() {
         println!("Installing service...");
         if let Err(e) = service::install() {
-            let is_perm = std::error::Error::source(&e)
-                .and_then(|e| e.source())
-                .and_then(|e| e.downcast_ref::<std::io::Error>())
-                .is_some_and(|io| io.kind() == std::io::ErrorKind::PermissionDenied);
+            let is_perm = e.chain().any(|cause| {
+                cause.downcast_ref::<std::io::Error>()
+                    .is_some_and(|io| io.kind() == std::io::ErrorKind::PermissionDenied)
+            });
             if is_perm {
                 anyhow::bail!(
                     "Permission denied. Run with sudo:\n  sudo mcplink"
